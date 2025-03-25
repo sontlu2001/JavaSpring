@@ -1,6 +1,16 @@
 server:
   port: 8002
 
+player:
+  name: Son
+  age: 22
+  maps:
+    k1: v1,
+    k2: v2
+  list:
+    - list1
+    - list2
+  isActive: true
 database:
   host:
   username:
