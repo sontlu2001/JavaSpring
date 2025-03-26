@@ -1,6 +1,8 @@
 package com.example.LearningJava.repository;
 
 import com.example.LearningJava.entity.user.UserEntify;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -63,4 +65,9 @@ public interface UserRepository extends JpaRepository<UserEntify, Long>, JpaSpec
     @Query(value = "SELECT count(id) FROM user001",nativeQuery = true)
     long getTotaleUser();
 
+    /*
+    * Pageable
+    * */
+
+    Page<UserEntify> findByUserName(String userName, Pageable pageable);
 }
