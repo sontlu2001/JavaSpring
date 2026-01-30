@@ -4,12 +4,12 @@ spring:
   application:
     name: JavaSpring
   datasource:
-    url: jdbc:mysql://localhost:3307/shopdev
-    username: sondev
-    password: 12344321
-    driver-class-name: com.mysql.jdbc.Driver
+    url: "jdbc:postgresql://103.146.22.246:5432/ifs_sunday_dev?currentSchema=bpmn"
+    username: "postgres"
+    password: "///Killer2stz"
+    driver-class-name: org.postgresql.Driver
   jpa:
-    database: mysql
+    database: postgresql
     show-sql: true
     hibernate:
       ddl-auto: update
@@ -17,3 +17,6 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+flowable:
+  database-schema-update: true
+  async-executor-activate: true
