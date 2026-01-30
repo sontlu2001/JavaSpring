@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn"
+             targetNamespace="http://example.com/holiday">
+
+    <process id="holidayApprovalProcess"
+             name="Holiday Approval Process"
+             isExecutable="true">
+
+        <!-- Start -->
+        <startEvent id="startEvent" />
+
+        <!-- Manager approves / reviews request -->
+        <userTask id="approveTask"
+                  name="Review holiday request" />
+
+        <!-- Decision gateway -->
+        <exclusiveGateway id="decisionGateway"
+                          name="Holiday days decision" />
+
+        <!-- Approved path (>= 10 days) -->
+        <serviceTask id="enterHoliday"
+                     name="Enter holidays in external system"
+                     flowable:class="com.example.flowable.EnterHolidayDelegate" />
+
+        <userTask id="holidayApproved"
+                  name="Holiday approved" />
+
+        <endEvent id="approvedEnd" />
+
+        <!-- Rejected path (< 10 days) -->
+        <serviceTask id="sendRejection"
+                     name="Send rejection email"
+                     flowable:class="com.example.flowable.SendRejectionEmailDelegate" />
+
+        <endEvent id="rejectedEnd" />
+
+        <!-- Sequence flows -->
+        <sequenceFlow sourceRef="startEvent" targetRef="approveTask" />
+        <sequenceFlow sourceRef="approveTask" targetRef="decisionGateway" />
+
+        <!-- Approve if holidayDays >= 10 -->
+        <sequenceFlow sourceRef="decisionGateway" targetRef="enterHoliday">
+            <conditionExpression xsi:type="tFormalExpression">
+                ${holidayDays >= 10}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <!-- Reject if holidayDays < 10 -->
+        <sequenceFlow sourceRef="decisionGateway" targetRef="sendRejection">
+            <conditionExpression xsi:type="tFormalExpression">
+                ${holidayDays < 10}
+            </conditionExpression>
+        </sequenceFlow>
+
+        <sequenceFlow sourceRef="enterHoliday" targetRef="holidayApproved" />
+        <sequenceFlow sourceRef="holidayApproved" targetRef="approvedEnd" />
+
+        <sequenceFlow sourceRef="sendRejection" targetRef="rejectedEnd" />
+
+    </process>
+</definitions>
